@@ -38,7 +38,10 @@ pub async fn handler(
     })
     .unwrap();
 
-    let row: Value = response.try_get(0).unwrap();
+    let row: Value = match response.try_get(0) {
+        Ok(row) => row,
+        Err(_) => return (StatusCode::INTERNAL_SERVER_ERROR, "Failed to get row".to_string()),
+    };
     println!("{:#?}", row);
 
     let system_message = "You are going to be given some data that is being returned from a postgres database. Summarize the data into something user friendly and explaining what the data is.".to_string();
