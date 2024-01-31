@@ -10,7 +10,7 @@ use crate::utils::gpt_request;
 
 #[derive(Deserialize, Debug)]
 pub struct Question {
-    question: String,
+    q: String,
 }
 
 pub async fn handler(
@@ -78,10 +78,10 @@ WHERE
     let system_message =
         format!("You will be given a question about a postgres database. Here is the metadata for all the postgres tables in the database. You will be asked to write a query that answers the question. Only respond with a valid SQL SELECT query. \n\n{:#?}", response);
 
-    println!("Question: {}", params.question);
+    println!("Question: {}", params.q);
     println!("System message: {}", system_message);
 
-    match gpt_request(system_message, params.question).await {
+    match gpt_request(system_message, params.q).await {
         Ok(response) => (StatusCode::OK, response),
         Err(_) => (
             StatusCode::INTERNAL_SERVER_ERROR,
